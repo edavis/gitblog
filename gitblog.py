@@ -5,6 +5,7 @@ import os
 import sys
 import time
 import jinja2
+import markdown
 import argparse
 import subprocess
 
@@ -57,7 +58,7 @@ class Post(object):
             template = environment.get_template('post.html')
             content = template.render(
                 title=self.title,
-                body=self.body,
+                body=jinja2.Markup(markdown.markdown(self.body)),
                 commit=self.commit,
             )
             html.write(content)
