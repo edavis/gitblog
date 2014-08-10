@@ -59,7 +59,6 @@ class Post(object):
             content = template.render(
                 title=self.title,
                 body=jinja2.Markup(markdown.markdown(self.body)),
-                commit=self.commit,
             )
             html.write(content)
 
