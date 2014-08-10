@@ -1,9 +1,14 @@
 #!/usr/bin/env python
 
 import re
+import os
 import sys
 import time
+import jinja2
+import argparse
 import subprocess
+
+environment = jinja2.Environment(loader=jinja2.FileSystemLoader('/Users/eric/src/gitblog/templates/'))
 
 class Commit(object):
     def __init__(self, hexdigest):
@@ -17,8 +22,10 @@ class Commit(object):
             self.headers[k] = v
 
 class Post(object):
-    def __init__(self, commit):
+    def __init__(self, commit, args):
         self.commit = commit
+        self.args = args
+        (self.title, self.body) = self.commit.body.split('\n\n', 1)
 
     def timestamp(self):
         """
@@ -32,11 +39,7 @@ class Post(object):
         """
         Return a slug of the commit message's first line.
         """
-        if '\n\n' in self.commit.body:
-            (title, _) = self.commit.body.split('\n\n', 1)
-        else:
-            title = self.commit.body
-        slug = re.sub('[^\w-]', '-', title)
+        slug = re.sub('[^\w-]', '-', self.title)
         slug = re.sub('--+', '-', slug)
         slug = re.sub('(-$|^-)', '', slug)
         return slug.lower()
@@ -45,11 +48,29 @@ class Post(object):
         return '%s/%s.html' % (time.strftime('%Y/%m/%d', self.timestamp()),
                                self.slug())
 
+    def render(self):
+        destination = os.path.join(self.args.output, self.path())
+        if not os.path.isdir(os.path.dirname(destination)):
+            os.makedirs(os.path.dirname(destination))
+
+        with open(destination, 'w') as html:
+            template = environment.get_template('post.html')
+            content = template.render(
+                title=self.title,
+                body=self.body,
+                commit=self.commit,
+            )
+            html.write(content)
+
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-o', '--output', default='html')
+    args = parser.parse_args()
+
     for hexdigest in sys.stdin:
         c = Commit(hexdigest)
-        p = Post(c)
-        print (p.path(), c.hexdigest)
+        p = Post(c, args)
+        p.render()
 
 if __name__ == '__main__':
     main()
