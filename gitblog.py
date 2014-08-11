@@ -2,7 +2,6 @@
 
 import re
 import os
-import sys
 import time
 import jinja2
 import markdown
