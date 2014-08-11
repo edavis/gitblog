@@ -31,5 +31,4 @@ $ cat html/2014/08/10/hello-world.html
 <p>This is the first post in gitblog!</p>
 ```
 
-It's still in the very early stages, but I think there is promise with
-it.
+It's still in the (very) early stages, but I think it has promise.
