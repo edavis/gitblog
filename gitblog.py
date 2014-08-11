@@ -9,7 +9,9 @@ import markdown
 import argparse
 import subprocess
 
-environment = jinja2.Environment(loader=jinja2.FileSystemLoader('/Users/eric/src/gitblog/templates/'))
+environment = jinja2.Environment(
+    loader = jinja2.FileSystemLoader('/Users/eric/src/gitblog/templates/')
+)
 
 class Commit(object):
     def __init__(self, hexdigest):
@@ -57,8 +59,8 @@ class Post(object):
         with open(destination, 'w') as html:
             template = environment.get_template('post.html')
             content = template.render(
-                title=self.title,
-                body=jinja2.Markup(markdown.markdown(self.body)),
+                title = self.title,
+                body = markdown.markdown(self.body),
             )
             html.write(content)
 
