@@ -67,10 +67,18 @@ class Post(object):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-o', '--output', default='html')
+    parser.add_argument('-b', '--branch', default='master')
     args = parser.parse_args()
 
-    for hexdigest in sys.stdin:
-        c = Commit(hexdigest)
+    revlist = subprocess.Popen(
+        ['git', 'rev-list', args.branch],
+        stdout = subprocess.PIPE,
+    )
+    (stdout, stderr) = revlist.communicate()
+
+    stdout = stdout.rstrip()
+    for rev in stdout.split('\n'):
+        c = Commit(rev)
         p = Post(c, args)
         p.render()
 

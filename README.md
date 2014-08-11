@@ -24,9 +24,7 @@ Date:   Sun Aug 10 20:42:28 2014 -0700
     Hello World
     
     This is the first post in gitblog!
-$ git rev-list master | ./gitblog.py
-$ find html -type f
-html/2014/08/10/hello-world.html
+$ ./gitblog.py
 $ cat html/2014/08/10/hello-world.html
 <h1>Hello World</h1>
 
