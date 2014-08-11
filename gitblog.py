@@ -10,7 +10,7 @@ import argparse
 import subprocess
 
 environment = jinja2.Environment(
-    loader = jinja2.FileSystemLoader('/Users/eric/src/gitblog/templates/')
+    loader = jinja2.FileSystemLoader(os.path.join(os.path.dirname(__file__), 'templates/')),
 )
 
 class Commit(object):
